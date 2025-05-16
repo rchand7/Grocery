@@ -1,11 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
 const Navbar = () => {
   const [open, setOpen] = useState(false);
-  const { user, setUser, showUserLogin, setShowUserLogin, navigate } =
-    useAppContext();
+  const {
+    user,
+    setUser,
+    showUserLogin,
+    setShowUserLogin,
+    navigate,
+    searchQuery,
+    setSearchQuery,
+  } = useAppContext();
+
+  useEffect(() => {
+    if (searchQuery.length > 0) {
+      navigate("/products");
+    }
+  }, []);
   return (
     <nav className="flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 bg-white relative transition-all">
       <Link to="/">
@@ -15,10 +28,11 @@ const Navbar = () => {
       {/* Desktop Menu */}
       <div className="hidden sm:flex items-center gap-8">
         <Link to={"/"}>Home</Link>
-        <Link to={"/products"}>Products</Link>
+        <Link to={"/products"}>All Products</Link>
 
         <div className="hidden lg:flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full">
           <input
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500"
             type="text"
             placeholder="Search products"

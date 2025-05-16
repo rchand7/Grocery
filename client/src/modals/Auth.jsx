@@ -5,11 +5,12 @@ const Auth = () => {
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const { setShowUserLogin } = useAppContext();
+  const { setShowUserLogin, setUser } = useAppContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(name, email, password);
+    setUser({ email: "babar@gmail", name: "babar" });
+    setShowUserLogin(false);
   };
   return (
     <div

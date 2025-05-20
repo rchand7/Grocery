@@ -12,6 +12,7 @@ const Navbar = () => {
     navigate,
     searchQuery,
     setSearchQuery,
+    cartCount,
   } = useAppContext();
 
   useEffect(() => {
@@ -81,7 +82,7 @@ const Navbar = () => {
             />
           </svg>
           <button className="absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full">
-            3
+            {cartCount()}
           </button>
         </div>
 
@@ -89,7 +90,10 @@ const Navbar = () => {
           <div className="relative group">
             <img src={assets.profile_icon} alt="" className="w-10" />
             <ul className="hidden group-hover:block absolute top-10 roght-0 bg-white shadow border border-gray-200 py-2 w-30 rounded-md z-40 text-sm">
-              <li onClick={() => navigate("/my-orders")} className="p-1.5 ">
+              <li
+                onClick={() => navigate("/my-orders")}
+                className="p-1.5 cursor-pointer"
+              >
                 My Orders
               </li>
               <li
@@ -135,7 +139,7 @@ const Navbar = () => {
             />
           </svg>
           <button className="absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full">
-            3
+            {cartCount()}
           </button>
         </div>
         <button
@@ -182,7 +186,10 @@ const Navbar = () => {
           <div className="relative group">
             <img src={assets.profile_icon} alt="" className="w-10" />
             <ul className="hidden group-hover:block absolute top-10 roght-0 bg-white shadow border border-gray-200 py-2 w-30 rounded-md z-40 text-sm">
-              <li onClick={() => navigate("/my-orders")} className="p-1.5 ">
+              <li
+                onClick={() => navigate("/my-orders")}
+                className="p-1.5 cursor-pointer"
+              >
                 My Orders
               </li>
               <li

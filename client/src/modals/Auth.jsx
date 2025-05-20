@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useAppContext } from "../context/appContext";
 const Auth = () => {
   const [state, setState] = React.useState("login");

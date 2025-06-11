@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
+import toast from "react-hot-toast";
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const {
@@ -13,8 +14,23 @@ const Navbar = () => {
     searchQuery,
     setSearchQuery,
     cartCount,
+    axios,
   } = useAppContext();
 
+  const logout = async () => {
+    try {
+      const { data } = await axios.get("/api/user/logout");
+      if (data.success) {
+        setUser(null);
+        navigate("/");
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
   useEffect(() => {
     if (searchQuery.length > 0) {
       navigate("/products");
@@ -96,13 +112,7 @@ const Navbar = () => {
               >
                 My Orders
               </li>
-              <li
-                className="cursor-pointer p-1.5"
-                onClick={() => {
-                  setUser(null);
-                  navigate("/");
-                }}
-              >
+              <li className="cursor-pointer p-1.5" onClick={logout}>
                 Logout
               </li>
             </ul>

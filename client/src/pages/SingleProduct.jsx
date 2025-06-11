@@ -3,13 +3,13 @@ import { useAppContext } from "../context/appContext";
 import { Link, useParams } from "react-router-dom";
 import { assets } from "../assets/assets";
 import ProductCard from "../components/ProductCard";
-
 const SingleProduct = () => {
   const { products, navigate, addToCart } = useAppContext();
   const { id } = useParams();
   const [thumbnail, setThumbnail] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const product = products.find((product) => product._id === id);
+  console.log("product", product);
   useEffect(() => {
     if (products.length > 0) {
       let productsCopy = products.slice();
@@ -44,13 +44,19 @@ const SingleProduct = () => {
                   onClick={() => setThumbnail(image)}
                   className="border max-w-24 border-gray-500/30 rounded overflow-hidden cursor-pointer"
                 >
-                  <img src={image} alt={`Thumbnail ${index + 1}`} />
+                  <img
+                    src={`http://localhost:5000/images/${image}`}
+                    alt={`Thumbnail ${index + 1}`}
+                  />
                 </div>
               ))}
             </div>
 
             <div className="border border-gray-500/30 max-w-100 rounded overflow-hidden">
-              <img src={thumbnail} alt="Selected product" />
+              <img
+                src={`http://localhost:5000/images/${thumbnail}`}
+                alt="Selected product"
+              />
             </div>
           </div>
 

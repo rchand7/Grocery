@@ -1,16 +1,30 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAppContext } from "../context/appContext";
+import { toast } from "react-hot-toast";
 const Auth = () => {
-  const [state, setState] = React.useState("login");
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const { setShowUserLogin, setUser } = useAppContext();
+  const [state, setState] = useState("login");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { setShowUserLogin, setUser, axios, navigate } = useAppContext();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setUser({ email: "babar@gmail", name: "babar" });
-    setShowUserLogin(false);
+    try {
+      e.preventDefault();
+      const { data } = await axios.post(`/api/user/${state}`, {
+        name,
+        email,
+        password,
+      });
+      if (data.success) {
+        toast.success(data.message);
+        navigate("/");
+        setUser(data.user);
+        setShowUserLogin(false);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {}
   };
   return (
     <div
@@ -24,7 +38,7 @@ const Auth = () => {
       >
         <p className="text-2xl font-medium m-auto">
           <span className="text-indigo-500">User</span>{" "}
-          {state === "login" ? "Login" : "Sign Up"}
+          {state === "login" ? "Login" : "Register"}
         </p>
         {state === "register" && (
           <div className="w-full">

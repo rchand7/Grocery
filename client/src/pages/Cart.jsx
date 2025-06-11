@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useAppContext } from "../context/AppContext";
 import { dummyAddress } from "../assets/assets";
+import axios from "axios";
+import toast from "react-hot-toast";
 const Cart = () => {
   const {
     products,
@@ -8,17 +10,20 @@ const Cart = () => {
     cartCount,
     totalCartAmount,
     cartItems,
+    setCartItems,
     removeFromCart,
     updateCartItem,
+    axios,
+    user,
   } = useAppContext();
 
   // state to store the products available in cart
   const [cartArray, setCartArray] = useState([]);
   // state to address
-  const [address, setAddress] = useState(dummyAddress);
+  const [address, setAddress] = useState([]);
   const [showAddress, setShowAddress] = useState(false);
   // state for selected address
-  const [selectedAddress, setSelectedAddress] = useState(dummyAddress[0]);
+  const [selectedAddress, setSelectedAddress] = useState(null);
   const [paymentOption, setPaymentOption] = useState("COD");
 
   const getCart = () => {
@@ -31,14 +36,58 @@ const Cart = () => {
     setCartArray(tempArray);
   };
 
+  const getAddress = async () => {
+    try {
+      const { data } = await axios.get("/api/address/get");
+      if (data.success) {
+        setAddress(data.addresses);
+        if (data.addresses.length > 0) {
+          setSelectedAddress(data.addresses[0]);
+        }
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+  useEffect(() => {
+    if (user) {
+      getAddress();
+    }
+  }, [user]);
+
   useEffect(() => {
     if (products.length > 0 && cartItems) {
       getCart();
     }
   }, [products, cartItems]);
-
-  const placeOrder = async () => {};
-
+  const placeOrder = async () => {
+    try {
+      if (!selectedAddress) {
+        return toast.error("Please select an address");
+      }
+      // place order with cod
+      if (paymentOption === "COD") {
+        const { data } = await axios.post("/api/order/cod", {
+          items: cartArray.map((item) => ({
+            product: item._id,
+            quantity: item.quantity,
+          })),
+          address: selectedAddress._id,
+        });
+        if (data.success) {
+          toast.success(data.message);
+          setCartItems({});
+          navigate("/my-orders");
+        } else {
+          toast.error(data.message);
+        }
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
   return products.length > 0 && cartItems ? (
     <div className="flex flex-col md:flex-row py-16 max-w-6xl w-full px-6 mx-auto">
       <div className="flex-1 max-w-4xl">
@@ -68,7 +117,7 @@ const Cart = () => {
               >
                 <img
                   className="max-w-full h-full object-cover"
-                  src={product.image[0]}
+                  src={`http://localhost:5000/images/${product.image[0]}`}
                   alt={product.name}
                 />
               </div>

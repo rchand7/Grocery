@@ -117,7 +117,7 @@ const Cart = () => {
               >
                 <img
                   className="max-w-full h-full object-cover"
-                  src={`https://grocery-lzbo.onrender.com/images/${product.image[0]}`}
+                  src={`https://grocery-77.onrender.com/images/${product.image[0]}`}
                   alt={product.name}
                 />
               </div>
